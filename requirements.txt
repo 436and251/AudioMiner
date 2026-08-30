@@ -1,0 +1,6 @@
+numpy
+soundfile
+yt-dlp
+faster-whisper
+demucs
+requests>=2.31

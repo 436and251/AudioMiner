@@ -1,0 +1,2 @@
+# Install core requirements first, then this file.
+PySide6>=6.8,<7

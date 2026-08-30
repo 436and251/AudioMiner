@@ -1,0 +1,79 @@
+from __future__ import annotations
+
+import sys
+import ctypes
+from pathlib import Path
+
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication, QDialog
+
+from .first_run import FirstRunDialog
+from .main_window import MainWindow
+from .settings import AppSettings, apply_model_environment
+from .styles import APP_QSS
+
+
+def set_windows_app_id() -> None:
+    if sys.platform == "win32":
+        try:
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+                "VoiceDatasetBuilder.Desktop"
+            )
+        except Exception:
+            pass
+
+
+def resource_path(relative_path: str) -> Path:
+    if getattr(sys, "frozen", False):
+        base_dir = Path(sys._MEIPASS)
+    else:
+        # app.py 位于 tts_builder/gui/app.py
+        # parents[2] 回到项目根目录
+        base_dir = Path(__file__).resolve().parents[2]
+
+    return base_dir / relative_path
+
+
+def create_application(argv=None) -> QApplication:
+
+    set_windows_app_id()
+    app = QApplication.instance() or QApplication(argv or sys.argv)
+
+    app.setApplicationName("Voice Dataset Builder")
+    app.setStyleSheet(APP_QSS)
+
+    icon_path = resource_path("assets/app.ico")
+    if icon_path.exists():
+        app.setWindowIcon(QIcon(str(icon_path)))
+
+    return app
+
+
+def main(argv=None) -> int:
+    app = create_application(argv)
+
+    settings = AppSettings.load()
+    apply_model_environment(settings.model_root)
+
+    if not settings.first_run_completed:
+        dialog = FirstRunDialog(settings)
+
+        if dialog.exec() != QDialog.Accepted:
+            return 0
+
+        settings = dialog.result_settings()
+        settings.save()
+
+        apply_model_environment(settings.model_root)
+
+    window = MainWindow(settings)
+
+    icon_path = resource_path("assets/app.ico")
+    icon = QIcon(str(icon_path))
+
+    if not icon.isNull():
+        window.setWindowIcon(icon)
+
+    window.show()
+
+    return app.exec()

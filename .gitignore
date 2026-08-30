@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+dataset_out/
+_tmp/
+cookies/
+cookies.txt
+*.cookies.txt
+build/
+dist/
+*.spec.bak
+vendor/ffmpeg/*.exe
