@@ -452,8 +452,6 @@ dist/VoiceDatasetBuilder/VoiceDatasetBuilder.exe
 
 当前具备初级分辨主说话人的能力，但是如果素材中多人频繁交替说话，建议先单独整理目标说话人的素材，再导入本工具。
 
+欢迎大家下载下来自己根据需求魔改，待开发玩法应该还是挺多的！
+
 ---
-
-# License / Distribution
-
-发布前请根据项目实际情况补充 License、第三方依赖许可和 FFmpeg 分发说明。
