@@ -10,3 +10,4 @@ build/
 dist/
 *.spec.bak
 vendor/ffmpeg/*.exe
+docs/
